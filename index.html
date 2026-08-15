@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>WeedHack</title>
 <style>
   html, body {
@@ -9,30 +10,87 @@
     padding: 0;
     height: 100%;
     background: #000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     overflow: hidden;
   }
 
+  #stage {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+  }
+
   video {
-    width: 75vw;
-    height: 75vh;
+    display: block;
     object-fit: contain;
+    background: #000;
+  }
+
+  #loading {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: sans-serif;
+    font-size: 1.5rem;
+    z-index: 9999;
   }
 </style>
 </head>
 <body>
 
-<video id="video" autoplay loop playsinline>
-  <source src="https://raw.githubusercontent.com/widget347/widget/main/video.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+<div id="loading">Loading...</div>
+<div id="stage">
+  <video id="video" loop playsinline></video>
+</div>
 
 <script>
+  const src = 'https://raw.githubusercontent.com/widget347/widget/main/video.mp4';
+
   const video = document.getElementById('video');
-  video.muted = false;
-  video.play();
+  const stage = document.getElementById('stage');
+  const loading = document.getElementById('loading');
+
+  function sizeVideo() {
+    const aspect = video.videoWidth / video.videoHeight;
+    const maxW = window.innerWidth * 0.75;
+    const maxH = window.innerHeight * 0.75;
+
+    let w = maxW;
+    let h = w / aspect;
+
+    if (h > maxH) {
+      h = maxH;
+      w = h * aspect;
+    }
+
+    video.style.width = w + 'px';
+    video.style.height = h + 'px';
+  }
+
+  video.preload = 'auto';
+  video.src = src;
+
+  video.addEventListener('loadedmetadata', () => {
+    sizeVideo();
+    loading.style.display = 'none';
+    stage.style.opacity = 1;
+
+    video.muted = false;
+    video.play().catch(() => {
+      // Browser blocked unmuted autoplay — fall back to muted so playback
+      // still starts. Sound can resume once the user interacts with the page.
+      video.muted = true;
+      video.play();
+    });
+  });
+
+  window.addEventListener('resize', sizeVideo);
 </script>
 
 </body>
