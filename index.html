@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>WeedHack</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  video {
+    width: 75vw;
+    height: 75vh;
+    object-fit: contain;
+  }
+
+  #unmute-overlay {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    z-index: 10;
+  }
+
+  #unmute-overlay button {
+    font-size: 1.1rem;
+    padding: 0.9em 1.6em;
+    border: none;
+    border-radius: 999px;
+    background: #fff;
+    color: #000;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<video id="video" autoplay loop playsinline>
+  <source src="https://raw.githubusercontent.com/widget347/widget/main/video.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+<div id="unmute-overlay">
+  <button id="unmute-btn">Tap to play with sound</button>
+</div>
+
+<script>
+  const video = document.getElementById('video');
+  const overlay = document.getElementById('unmute-overlay');
+  const btn = document.getElementById('unmute-btn');
+
+  // Try to autoplay with sound first.
+  video.muted = false;
+  const playPromise = video.play();
+
+  if (playPromise !== undefined) {
+    playPromise.catch(() => {
+      // Browser blocked autoplay with sound — show a one-tap overlay.
+      overlay.style.display = 'flex';
+    });
+  }
+
+  btn.addEventListener('click', () => {
+    video.muted = false;
+    video.play();
+    overlay.style.display = 'none';
+  });
+</script>
+
+</body>
+</html>
