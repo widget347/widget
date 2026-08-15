@@ -81,13 +81,19 @@
     loading.style.display = 'none';
     stage.style.opacity = 1;
 
+    // Start muted so autoplay is never blocked by the browser.
+    video.muted = true;
+    video.play();
+  });
+
+  // Hover to unmute, leave to mute again.
+  video.addEventListener('mouseenter', () => {
     video.muted = false;
-    video.play().catch(() => {
-      // Browser blocked unmuted autoplay — fall back to muted so playback
-      // still starts. Sound can resume once the user interacts with the page.
-      video.muted = true;
-      video.play();
-    });
+    video.volume = 1.0;
+  });
+
+  video.addEventListener('mouseleave', () => {
+    video.muted = true;
   });
 
   window.addEventListener('resize', sizeVideo);
