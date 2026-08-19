@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WeedHack</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: #000;
+    overflow: hidden;
+  }
+
+  #stage {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+  }
+
+  video {
+    display: block;
+    object-fit: contain;
+    background: #000;
+  }
+
+  #loading {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: sans-serif;
+    font-size: 1.5rem;
+    z-index: 9999;
+  }
+</style>
+</head>
+<body>
+
+<div id="loading">Loading...</div>
+<div id="stage">
+  <video id="video" loop playsinline></video>
+</div>
+
+<script>
+  const src = 'https://raw.githubusercontent.com/widget347/widget/main/video.mp4';
+
+  const video = document.getElementById('video');
+  const stage = document.getElementById('stage');
+  const loading = document.getElementById('loading');
+
+  function sizeVideo() {
+    const aspect = video.videoWidth / video.videoHeight;
+    const maxW = window.innerWidth * 0.75;
+    const maxH = window.innerHeight * 0.75;
+
+    let w = maxW;
+    let h = w / aspect;
+
+    if (h > maxH) {
+      h = maxH;
+      w = h * aspect;
+    }
+
+    video.style.width = w + 'px';
+    video.style.height = h + 'px';
+  }
+
+  video.preload = 'auto';
+  video.src = src;
+
+  video.addEventListener('loadedmetadata', () => {
+    sizeVideo();
+    loading.style.display = 'none';
+    stage.style.opacity = 1;
+
+    // Start muted so autoplay is never blocked by the browser.
+    video.muted = true;
+    video.play();
+  });
+
+  // Hover to unmute, leave to mute again.
+  video.addEventListener('mouseenter', () => {
+    video.muted = false;
+    video.volume = 1.0;
+  });
+
+  video.addEventListener('mouseleave', () => {
+    video.muted = true;
+  });
+
+  window.addEventListener('resize', sizeVideo);
+</script>
+
+</body>
+</html>
