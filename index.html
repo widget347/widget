@@ -118,23 +118,23 @@
     gap: 5px;
     font-size: 10.5px;
     letter-spacing: 0.1em;
-    color: var(--ok);
+    color: var(--red);
     margin-top: 2px;
   }
   .w-pill::before {
     content: "";
     width: 6px; height: 6px;
     border-radius: 50%;
-    background: var(--ok);
-    box-shadow: 0 0 0 0 rgba(61,214,140,.6);
+    background: var(--red);
+    box-shadow: 0 0 0 0 rgba(227,28,35,.6);
     animation: wpulse 2s infinite;
   }
   .w-pill.off { color: var(--muted); }
   .w-pill.off::before { background: var(--muted); animation: none; box-shadow: none; }
   @keyframes wpulse {
-    0%   { box-shadow: 0 0 0 0 rgba(61,214,140,.55); }
-    70%  { box-shadow: 0 0 0 5px rgba(61,214,140,0); }
-    100% { box-shadow: 0 0 0 0 rgba(61,214,140,0); }
+    0%   { box-shadow: 0 0 0 0 rgba(227,28,35,.55); }
+    70%  { box-shadow: 0 0 0 5px rgba(227,28,35,0); }
+    100% { box-shadow: 0 0 0 0 rgba(227,28,35,0); }
   }
 
   .w-stats {
@@ -185,7 +185,7 @@
 
     <div class="widget-card">
       <div class="w-top">
-        <div class="w-avatar" id="wAvatar">–</div>
+        <div class="w-avatar" id="wAvatar"><img src="https://i.imgur.com/BtNYRFI.png" alt="server icon"></div>
         <div class="w-id">
           <div class="w-name" id="wName">connecting…</div>
           <div class="w-pill off" id="wPill">checking</div>
@@ -231,7 +231,6 @@
       if (!res.ok) throw new Error('status ' + res.status);
       const data = await res.json();
 
-      document.getElementById('wAvatar').textContent = initials(data.name);
       document.getElementById('wName').textContent = data.name;
 
       const pill = document.getElementById('wPill');
@@ -241,10 +240,8 @@
       document.getElementById('wOnline').textContent = data.presence_count ?? '–';
       document.getElementById('wVoice').textContent = (data.members || []).length;
 
-      const top = topActivity(data.members);
-      document.getElementById('wActivity').innerHTML = top
-        ? `Most active: <b>${top.name}</b> ×${top.count}`
-        : 'No live activity right now.';
+      document.getElementById('wActivity').textContent =
+        'https://discord.widget.wtf';
     } catch (err) {
       document.getElementById('wName').textContent = 'Status unavailable';
       const pill = document.getElementById('wPill');
