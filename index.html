@@ -238,8 +238,7 @@
       pill.classList.remove('off');
 
       document.getElementById('wOnline').textContent = data.presence_count ?? '–';
-      document.getElementById('wVoice').textContent = (data.members || []).length;
-
+      document.getElementById('wVoice').textContent = 0;
       document.getElementById('wActivity').textContent =
         'https://discord.widget.wtf';
     } catch (err) {
